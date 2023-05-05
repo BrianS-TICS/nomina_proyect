@@ -1,0 +1,42 @@
+<div class="modal-header">
+    <h4 class="modal-title">Añadir incapacidad médica</h4>
+    <button  class="btn" (click)="modal.dismiss()">
+        <span aria-hidden="true">&times;</span>
+    </button>
+</div>
+<div class="modal-body">
+    <form [formGroup]="formulario">
+        <div class="form-group">
+            <label for="folio">Folio:</label>
+            <input type="text" class="form-control" id="folio" formControlName="folio">
+        </div>
+        <div class="form-group">
+            <label for="rfc">RFC:</label>
+            <input type="text" class="form-control" id="rfc" formControlName="rfc">
+        </div>
+        <div class="form-group">
+            <label for="correo">Inicio de periodo:</label>
+            <input type="date" class="form-control" id="correo" formControlName="correo">
+        </div>
+        <div class="form-group">
+            <label for="correo">Final de periodo:</label>
+            <input type="date" class="form-control" id="correo" formControlName="correo">
+        </div>
+        <div class="form-group">
+            <label for="telefono">Dias:</label>
+            <input type="number" class="form-control" id="telefono" formControlName="telefono">
+        </div>
+        <div class="form-group">
+            <label for="telefono">Motivo:</label>
+            <input type="text" class="form-control" id="telefono" formControlName="telefono">
+        </div>
+        <div class="form-group">
+            <label for="telefono">Estatus:</label>
+            <input type="number" class="form-control" id="telefono" formControlName="telefono">
+        </div>
+    </form>
+</div>
+<div class="modal-footer">
+    <button type="button" class="btn btn-secondary" (click)="modal.dismiss()">Cancelar</button>
+    <button type="button" class="btn btn-primary" (click)="guardar()">Guardar</button>
+</div>

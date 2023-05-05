@@ -1,0 +1,66 @@
+<div class="modal-header">
+    <h4 class="modal-title">Añadir empleado</h4>
+    <button class="btn" (click)="modal.dismiss()">
+        <span aria-hidden="true">&times;</span>
+    </button>
+</div>
+<div class="modal-body">
+    <form [formGroup]="formulario">
+        <div class="form-group">
+            <label for="nombre">Nombre:</label>
+            <input type="text" class="form-control" id="nombre" formControlName="nombre">
+        </div>
+        <div class="form-group">
+            <label for="clave">Clave:</label>
+            <input type="text" class="form-control" id="clave" formControlName="clave">
+        </div>
+        <div class="form-group">
+            <label for="puesto">Puesto:</label>
+            <select class="form-select" formControlName="puesto" aria-label="Default select example">
+                <option *ngFor="let item of puestos" value="{{item.id}}">{{item.nombre}}</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label for="salario_diario">Salario diario:</label>
+            <input type="number" class="form-control" id="salario_diario" formControlName="salario_diario">
+        </div>
+        <div class="form-group">
+            <label for="fecha_inicio">Fecha inicio:</label>
+            <input type="date" class="form-control" id="fecha_inicio" formControlName="fecha_inicio">
+        </div>
+        <div class="form-group">
+            <label for="tipo_contrato">Tipo de contrato:</label>
+            <select class="form-select" formControlName="tipo_contrato" aria-label="Default select example">
+                <option value="1">Contrato temporal.</option>
+                <option value="2">Contrato indefinido.</option>
+                <option value="3">Contrato para la formación y el aprendizaje.</option>
+                <option value="3">Contrato en prácticas.</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label for="metodo_pago">Metodo de pago:</label>
+            <select class="form-select" formControlName="medoto_pago" aria-label="Default select example">
+                <option value="1">Efectivo.</option>
+                <option value="2">Cheques.</option>
+                <option value="3">Tarjetas de débito.</option>
+                <option value="4">Tarjetas de crédito.</option>
+                <option value="5">Transferencias bancarias electrónicas.</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label for="correo">Correo:</label>
+            <input type="text" class="form-control" id="correo" formControlName="correo">
+
+        </div>
+        <div class="form-group">
+            <label for="rfc">RFC:</label>
+            <input type="text" class="form-control" id="rfc" formControlName="rfc">
+
+        </div>
+
+    </form>
+</div>
+<div class="modal-footer">
+    <button type="button" class="btn btn-secondary" (click)="modal.dismiss()">Cancelar</button>
+    <button type="button" class="btn btn-primary" (click)="guardar()">Guardar</button>
+</div>

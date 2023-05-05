@@ -1,6 +1,11 @@
 import { Component } from '@angular/core';
 import { jsPDF } from "jspdf";
 import * as csvToJson from 'csvtojson';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { EmpleadoComponent } from './dialog/empleado/empleado.component';
+import { IncapacidadesComponent } from './dialog/incapacidades/incapacidades.component';
+import { NominaComponent } from './dialog/nomina/nomina.component';
+import { PuestoComponent } from './dialog/puesto/puesto.component';
 
 
 @Component({
@@ -11,12 +16,17 @@ import * as csvToJson from 'csvtojson';
 export class AppComponent {
   title = 'csvpayment';
   fileCharged: File;
+  
   private jsonData: any;
 
+  public puestos = [];
+  public CURRENTPAGE = 1;
 
-  constructor() {
+  constructor(private modalService: NgbModal) {
     this.fileCharged = null
     this.jsonData = null
+
+    this.getLocalStorageData();
   }
 
   public onFileSelected(event: any) {
@@ -35,6 +45,32 @@ export class AppComponent {
 
     };
   }
+
+  public getLocalStorageData() {
+
+    const puestosStr = localStorage['puestos'];
+    if (puestosStr) {
+      this.puestos = JSON.parse(puestosStr);
+    } 
+  }
+
+  public openEmpleadoDialog() {
+    const modalRef = this.modalService.open(EmpleadoComponent);
+    modalRef.componentInstance.variable = 'valor';
+  }
+
+  public openIncapacidadesDialog() {
+    const modalRef = this.modalService.open(IncapacidadesComponent);
+  }
+
+  public openNominaDialog() {
+    const modalRef = this.modalService.open(NominaComponent);
+  }
+
+  public openPuestoDialog() {
+    const modalRef = this.modalService.open(PuestoComponent);
+  }
+
 
 
 

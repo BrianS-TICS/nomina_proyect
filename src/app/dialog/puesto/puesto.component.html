@@ -1,0 +1,26 @@
+<div class="modal-header">
+    <h4 class="modal-title">Añadir puesto</h4>
+    <button  class="btn" (click)="modal.dismiss()">
+        <span aria-hidden="true">&times;</span>
+    </button>
+</div>
+<div class="modal-body">
+    <form [formGroup]="formulario">
+        <div class="form-group">
+            <label for="nombre">Nombre:</label>
+            <input type="text" class="form-control" id="nombre" formControlName="nombre">
+        </div>
+        <div class="form-group">
+            <label for="descripcion">Descripción:</label>
+            <input type="text" class="form-control" id="descripcion" formControlName="descripcion">
+        </div>
+        <div class="form-group">
+            <label for="Salario">Salario:</label>
+            <input type="number" class="form-control" id="salario" formControlName="salario">
+        </div>
+    </form>
+</div>
+<div class="modal-footer">
+    <button type="button" class="btn btn-secondary" (click)="modal.dismiss()">Cancelar</button>
+    <button type="button" class="btn btn-primary" (click)="guardar()">Guardar</button>
+</div>
