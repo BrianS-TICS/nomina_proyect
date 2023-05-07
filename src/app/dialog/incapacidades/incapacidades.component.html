@@ -10,29 +10,33 @@
             <label for="folio">Folio:</label>
             <input type="text" class="form-control" id="folio" formControlName="folio">
         </div>
+
         <div class="form-group">
             <label for="rfc">RFC:</label>
-            <input type="text" class="form-control" id="rfc" formControlName="rfc">
+            <select class="form-select" formControlName="rfc" aria-label="Default select example">
+                <option *ngFor="let item of empleados" value="{{item.id}}">{{item.rfc + ' - ' +item.nombre}}</option>
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label for="fecha_inicio">Inicio de periodo:</label>
+            <input type="date" class="form-control" id="fecha_inicio" formControlName="fecha_inicio">
         </div>
         <div class="form-group">
-            <label for="correo">Inicio de periodo:</label>
-            <input type="date" class="form-control" id="correo" formControlName="correo">
+            <label for="fecha_fin">Final de periodo:</label>
+            <input type="date" class="form-control" id="fecha_fin" formControlName="fecha_fin">
         </div>
         <div class="form-group">
-            <label for="correo">Final de periodo:</label>
-            <input type="date" class="form-control" id="correo" formControlName="correo">
+            <label for="dias">Dias:</label>
+            <input type="number" class="form-control" id="dias" formControlName="dias">
         </div>
         <div class="form-group">
-            <label for="telefono">Dias:</label>
-            <input type="number" class="form-control" id="telefono" formControlName="telefono">
+            <label for="motivo">Motivo:</label>
+            <input type="text" class="form-control" id="motivo" formControlName="motivo">
         </div>
         <div class="form-group">
-            <label for="telefono">Motivo:</label>
-            <input type="text" class="form-control" id="telefono" formControlName="telefono">
-        </div>
-        <div class="form-group">
-            <label for="telefono">Estatus:</label>
-            <input type="number" class="form-control" id="telefono" formControlName="telefono">
+            <label for="estatus">Estatus:</label>
+            <input type="number" class="form-control" id="estatus" formControlName="estatus">
         </div>
     </form>
 </div>

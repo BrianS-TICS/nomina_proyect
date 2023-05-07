@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
+import { v4 as uuidv4 } from 'uuid';
 
 @Component({
   selector: 'app-incapacidades',
@@ -10,6 +11,7 @@ import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 export class IncapacidadesComponent implements OnInit {
 
   formulario: FormGroup;
+  public empleados = [];
 
   constructor(
     private fb: FormBuilder,
@@ -17,23 +19,55 @@ export class IncapacidadesComponent implements OnInit {
   ) { }
 
   ngOnInit() {
+
+    this.getLocalStorageData()
+
     this.formulario = this.fb.group({
       folio: ['', Validators.required],
       rfc: ['', Validators.required],
-      correo: ['', [Validators.required, Validators.email]],
-      telefono: ['', Validators.pattern(/^-?(0|[1-9]\d*)?$/)]
+      fecha_inicio: ['', Validators.required],
+      fecha_fin: ['', Validators.required],
+      dias: ['', Validators.required],
+      motivo: ['', Validators.required],
+      estatus: ['', Validators.required],
     });
+  }
+
+  
+  public getLocalStorageData() {
+
+    const empleadosStr = localStorage['empleados'];
+    if (empleadosStr) {
+      this.empleados = JSON.parse(empleadosStr);
+    }
   }
 
   guardar() {
     if (this.formulario.valid) {
-      const empleado = {
+      const incapacidad = {
+        id : uuidv4(),
         folio: this.formulario.get('folio').value,
         rfc: this.formulario.get('rfc').value,
-        correo: this.formulario.get('correo').value,
-        telefono: this.formulario.get('telefono').value
+        fecha_inicio: this.formulario.get('fecha_inicio').value,
+        fecha_fin: this.formulario.get('fecha_fin').value,
+        dias: this.formulario.get('dias').value,
+        motivo: this.formulario.get('motivo').value,
+        estatus: this.formulario.get('estatus').value
       };
-      this.modal.close(empleado);
+
+      let incapacidades = []
+      const incapacidadesStr = localStorage['incapacidades'];
+
+      if (incapacidadesStr) {
+        incapacidades = JSON.parse(incapacidadesStr);
+        incapacidades.push(incapacidad)
+      } else {
+        incapacidades.push(incapacidad)
+      }
+
+      localStorage.setItem('incapacidades', JSON.stringify(incapacidades));
+
+      this.modal.close(incapacidad);
     }
   }
 
