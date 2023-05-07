@@ -1,227 +1,233 @@
-<ul class="nav mt-2">
-  <li class="nav-item">
-    <a class="nav-link" (click)="CURRENTPAGE = 1" aria-current="page" href="#">Nominas</a>
-  </li>
-  <li class="nav-item">
-    <a class="nav-link" (click)="CURRENTPAGE = 2" href="#">Empleados</a>
-  </li>
-  <li class="nav-item">
-    <a class="nav-link" (click)="CURRENTPAGE = 3" href="#">Incapacidades medicas</a>
-  </li>
+<div>
 
-  <li class="nav-item">
-    <a class="nav-link" (click)="CURRENTPAGE = 4" href="#">Negocio</a>
-  </li>
+  <ul class="nav p-4">
+    <li class="nav-item">
+      <a class="nav-link" (click)="CURRENTPAGE = 1" aria-current="page" href="#">Nominas</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" (click)="CURRENTPAGE = 2" href="#">Empleados</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" (click)="CURRENTPAGE = 3" href="#">Incapacidades medicas</a>
+    </li>
 
-</ul>
+    <li class="nav-item">
+      <a class="nav-link" (click)="CURRENTPAGE = 4" href="#">Negocio</a>
+    </li>
 
-<!-- Nominas -->
-<section *ngIf="CURRENTPAGE == 1" class="container mt-5">
+  </ul>
 
-  <h1 class="primary">Catálogo de nominas</h1>
+  <!-- Nominas -->
+  <section *ngIf="CURRENTPAGE == 1" class="container mt-5">
 
-  <table class="table mt-5">
-    <thead>
-      <tr>
-        <th scope="col">#</th>
-        <th scope="col">RFC</th>
-        <th scope="col">Nombre</th>
-        <th scope="col">Fecha</th>
-        <th scope="col">Periodo</th>
-        <th scope="col">Puesto</th>
-        <th scope="col">Dias pagados</th>
-        <th scope="col">Total neto</th>
-        <th scope="col">Acciones</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-      <tr *ngFor="let item of nominas; let index = index">
-        <th>{{index+1}}</th>
-        <td>{{item.rfc}}</td>
-        <td>{{item.nombre}}</td>
-        <td>{{item.fecha_creacion}}</td>
-        <td>{{item.fecha_inicio + ' a ' + item.fecha_fin}}</td>
-        <td>{{item.puesto}}</td>
-        <td>{{item.dias_pagados}}</td>
-        <td>{{item.total | currency:'MXN'}}</td>
-        <td>
-          <button type="button" class="btn p-0" (click)="imprimirNomina(item)" >
-            <img width="25px" src="assets/pdf.png" alt="icono de impresion pdf">
-          </button>
-        </td>
-      </tr>
-    </tbody>
+    <h1 class="primary">Catálogo de nominas</h1>
 
-  </table>
+    <table class="table">
+      <thead>
+        <tr>
+          <th scope="col">#</th>
+          <th scope="col">RFC</th>
+          <th scope="col">Nombre</th>
+          <th scope="col">Fecha</th>
+          <th scope="col">Periodo</th>
+          <th scope="col">Puesto</th>
+          <th scope="col">Dias pagados</th>
+          <th scope="col">Total neto</th>
+          <th scope="col">Acciones</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+        <tr *ngFor="let item of nominas; let index = index">
+          <th>{{index+1}}</th>
+          <td>{{item.rfc}}</td>
+          <td>{{item.nombre}}</td>
+          <td>{{item.fecha_creacion}}</td>
+          <td>{{item.fecha_inicio + ' a ' + item.fecha_fin}}</td>
+          <td>{{item.puesto}}</td>
+          <td>{{item.dias_pagados}}</td>
+          <td>{{item.total | currency:'MXN'}}</td>
+          <td>
+            <button type="button" class="btn p-0" (click)="imprimirNomina(item)">
+              <img width="25px" src="assets/pdf.png" alt="icono de impresion pdf">
+            </button>
+          </td>
+        </tr>
+      </tbody>
 
-  <p *ngIf="nominas.length == 0" class="alert alert-secondary">Aún no hay nominas</p>
+    </table>
 
-
-  <div class="d-flex gap-1">
-    <input class="mt-5 btn btn-primary" type="button" value="Añadir nomina" (click)="openNominaDialog()">
-  </div>
-
-</section>
-
-<!-- Empleados -->
-<section *ngIf="CURRENTPAGE == 2" class="container mt-5">
-
-  <h1 class="primary">Catálogo de empleados</h1>
-
-  <table class="table mt-5">
-    <thead>
-      <tr>
-        <th scope="col">#</th>
-        <th scope="col">Clave</th>
-        <th scope="col">Nombre</th>
-        <th scope="col">NSS</th>
-        <th scope="col">Puesto</th>
-        <th scope="col">Salario diario</th>
-        <th scope="col">Fecha de inicio</th>
-        <th scope="col">Tipo de contrato</th>
-        <th scope="col">Metodo de pago</th>
-        <th scope="col">Correo</th>
-        <th scope="col">RFC</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr *ngFor="let item of empleados; let index = index">
-        <th>{{index+1}}</th>
-        <td>{{item.clave}}</td>
-        <td>{{item.nombre}}</td>
-        <td>{{item.nss}}</td>
-        <td>{{findPuesto(item.puesto)}}</td>
-        <td>{{item.salario_diario | currency:'MXN' }}</td>
-        <td>{{item.fecha_inicio}}</td>
-        <td>{{findTipoContrato(item.tipo_contrato)}}</td>
-        <td>{{findMetodoPago(item.metodo_pago)}}</td>
-        <td>{{item.correo}}</td>
-        <td>{{item.rfc}}</td>
-      </tr>
-    </tbody>
-
-  </table>
-
-  <p *ngIf="empleados.length == 0" class="alert alert-secondary">Aún no hay elementos</p>
+    <p *ngIf="nominas.length == 0" class="alert alert-secondary">Aún no hay nominas</p>
 
 
-  <div class="d-flex gap-1">
-    <input class="mt-5 btn btn-primary" type="button" value="Añadir empleado" (click)="openEmpleadoDialog()">
-  </div>
-
-</section>
-
-<!-- Incapacidades medicas -->
-<section *ngIf="CURRENTPAGE == 3" class="container mt-5">
-
-  <h1 class="primary">Catálogo de Incapacidades médicas</h1>
-
-  <table class="table mt-5">
-    <thead>
-      <tr>
-        <th scope="col">#</th>
-        <th scope="col">Folio</th>
-        <th scope="col">RFC</th>
-        <th scope="col">Periodo</th>
-        <th scope="col">Dias</th>
-        <th scope="col">Motivo</th>
-        <th scope="col">Estatus</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr *ngFor="let item of incapacidades; let index = index">
-        <th>{{index+1}}</th>
-        <td>{{item.folio}}</td>
-        <td>{{findRfcEmpleado(item.rfc)}}</td>
-        <td>{{item.fecha_inicio + ' - ' + item.fecha_fin}}</td>
-        <td>{{item.dias}}</td>
-        <td>{{item.motivo}}</td>
-        <td>{{item.estatus ? 'Activa' : 'Inactiva'}}</td>
-      </tr>
-    </tbody>
-
-
-  </table>
-  <p *ngIf="incapacidades.length == 0" class="alert alert-secondary">Aún no hay elementos</p>
-
-  <div class="d-flex gap-1">
-    <input class="mt-5 btn btn-primary" type="button" value="Añadir incapacidad médica"
-      (click)="openIncapacidadesDialog()">
-  </div>
-
-
-</section>
-
-
-<!-- Negocio -->
-<section *ngIf="CURRENTPAGE == 4" class="container mt-5 pb-5">
-
-  <h1 class="primary">Negocio</h1>
-
-
-  <h3 class="mt-5">Puestos</h3>
-
-  <table class="overflow-scroll table mt-2">
-    <thead>
-      <tr>
-        <th scope="col">#</th>
-        <th scope="col">Nombre</th>
-        <th scope="col">Descripción</th>
-        <th scope="col">Salario</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr *ngFor="let item of puestos; let index = index">
-        <th>{{index+1}}</th>
-        <td>{{item.nombre}}</td>
-        <td>{{item.descripcion}}</td>
-        <td>{{item.salario | currency:'MXN'}}</td>
-      </tr>
-    </tbody>
-  </table>
-  <p *ngIf="puestos.length == 0" class="alert alert-secondary">Aún no hay elementos</p>
-
-  <div class="d-flex gap-1">
-    <input class="mt-5 btn btn-primary" type="button" value="Añadir puesto" (click)="openPuestoDialog()">
-  </div>
-
-  <div class="row">
-    <div class="col-6">
-      <h3 class="mt-5">Percepciones</h3>
-      <table class="table mt-4 border">
-        <thead>
-          <tr>
-            <th scope="col">#</th>
-            <th scope="col">Nombre</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr *ngFor="let item of percepciones">
-            <th>{{item.valor}}</th>
-            <th>{{item.nombre}}</th>
-          </tr>
-        </tbody>
-      </table>
+    <div class="d-flex gap-1">
+      <input class="mt-5 btn btn-primary" type="button" value="Añadir nomina" (click)="openNominaDialog()">
     </div>
-    <div class="col-6">
-      <h3 class="mt-5">Deducciones</h3>
-      <table class="table mt-4 border">
-        <thead>
-          <tr>
-            <th scope="col">#</th>
-            <th scope="col">Nombre</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr *ngFor="let item of deducciones">
-            <th>{{item.valor}}</th>
-            <th>{{item.nombre}}</th>
-          </tr>
-        </tbody>
-      </table>
+
+  </section>
+
+  <!-- Empleados -->
+  <section *ngIf="CURRENTPAGE == 2" class="container mt-5">
+
+    <h1 class="primary">Catálogo de empleados</h1>
+
+    <table class="table mt-5">
+      <thead>
+        <tr>
+          <th scope="col">#</th>
+          <th scope="col">Clave</th>
+          <th scope="col">Nombre</th>
+          <th scope="col">NSS</th>
+          <th scope="col">Puesto</th>
+          <th scope="col">Salario diario</th>
+          <th scope="col">Fecha de inicio</th>
+          <th scope="col">Tipo de contrato</th>
+          <th scope="col">Metodo de pago</th>
+          <th scope="col">Correo</th>
+          <th scope="col">RFC</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let item of empleados; let index = index">
+          <th>{{index+1}}</th>
+          <td>{{item.clave}}</td>
+          <td>{{item.nombre}}</td>
+          <td>{{item.nss}}</td>
+          <td>{{findPuesto(item.puesto)}}</td>
+          <td>{{item.salario_diario | currency:'MXN' }}</td>
+          <td>{{item.fecha_inicio}}</td>
+          <td>{{findTipoContrato(item.tipo_contrato)}}</td>
+          <td>{{findMetodoPago(item.metodo_pago)}}</td>
+          <td>{{item.correo}}</td>
+          <td>{{item.rfc}}</td>
+        </tr>
+      </tbody>
+
+    </table>
+
+    <p *ngIf="empleados.length == 0" class="alert alert-secondary">Aún no hay elementos</p>
+
+
+    <div class="d-flex gap-1">
+      <input class="mt-5 btn btn-primary" type="button" value="Añadir empleado" (click)="openEmpleadoDialog()">
     </div>
-  </div>
+
+  </section>
+
+  <!-- Incapacidades medicas -->
+  <section *ngIf="CURRENTPAGE == 3" class="container mt-5">
+
+    <h1 class="primary">Catálogo de Incapacidades médicas</h1>
+
+    <table class="table mt-5">
+      <thead>
+        <tr>
+          <th scope="col">#</th>
+          <th scope="col">Folio</th>
+          <th scope="col">RFC</th>
+          <th scope="col">Periodo</th>
+          <th scope="col">Dias</th>
+          <th scope="col">Motivo</th>
+          <th scope="col">Estatus</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let item of incapacidades; let index = index">
+          <th>{{index+1}}</th>
+          <td>{{item.folio}}</td>
+          <td>{{findRfcEmpleado(item.rfc)}}</td>
+          <td>{{item.fecha_inicio + ' - ' + item.fecha_fin}}</td>
+          <td>{{item.dias}}</td>
+          <td>{{item.motivo}}</td>
+          <td>{{item.estatus == 1 ? 'Activa' : 'Inactiva'}}</td>
+        </tr>
+      </tbody>
 
 
-</section>
+    </table>
+    <p *ngIf="incapacidades.length == 0" class="alert alert-secondary">Aún no hay elementos</p>
+
+    <div class="d-flex gap-1">
+      <input class="mt-5 btn btn-primary" type="button" value="Añadir incapacidad médica"
+        (click)="openIncapacidadesDialog()">
+    </div>
+
+
+  </section>
+
+
+  <!-- Negocio -->
+  <section *ngIf="CURRENTPAGE == 4" class="container mt-5 pb-5">
+
+    <h1 class="primary">Negocio</h1>
+
+
+    <h3 class="mt-5">Puestos</h3>
+
+    <table class="overflow-scroll table mt-2">
+      <thead>
+        <tr>
+          <th scope="col">#</th>
+          <th scope="col">Nombre</th>
+          <th scope="col">Descripción</th>
+          <th scope="col">Salario</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let item of puestos; let index = index">
+          <th>{{index+1}}</th>
+          <td>{{item.nombre}}</td>
+          <td>{{item.descripcion}}</td>
+          <td>{{item.salario | currency:'MXN'}}</td>
+        </tr>
+      </tbody>
+    </table>
+    <p *ngIf="puestos.length == 0" class="alert alert-secondary">Aún no hay elementos</p>
+
+    <div class="d-flex gap-1">
+      <input class="mt-5 btn btn-primary" type="button" value="Añadir puesto" (click)="openPuestoDialog()">
+    </div>
+
+    <div class="row">
+      <div class="col-6">
+        <h3 class="mt-5">Percepciones</h3>
+        <table class="table mt-4 border">
+          <thead>
+            <tr>
+              <th scope="col">#</th>
+              <th scope="col">Nombre</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let item of percepciones">
+              <th>{{item.valor}}</th>
+              <th>{{item.nombre}}</th>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="col-6">
+        <h3 class="mt-5">Deducciones</h3>
+        <table class="table mt-4 border">
+          <thead>
+            <tr>
+              <th scope="col">#</th>
+              <th scope="col">Nombre</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let item of deducciones">
+              <th>{{item.valor}}</th>
+              <th>{{item.nombre}}</th>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    
+  </section>
+
+
+  <img src="assets/wave.svg" class="wave" alt="">
+</div>

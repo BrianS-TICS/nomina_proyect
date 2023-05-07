@@ -1,42 +1,72 @@
 <div class="modal-header">
     <h4 class="modal-title">Añadir incapacidad médica</h4>
-    <button  class="btn" (click)="modal.dismiss()">
+    <button class="btn" (click)="modal.dismiss()">
         <span aria-hidden="true">&times;</span>
     </button>
 </div>
 <div class="modal-body">
     <form [formGroup]="formulario">
-        <div class="form-group">
-            <label for="folio">Folio:</label>
-            <input type="text" class="form-control" id="folio" formControlName="folio">
+
+        <div class="row">
+            <div class="col-6">
+
+                <div class="form-group">
+                    <label for="folio">Folio:</label>
+                    <input type="text" class="form-control" id="folio" formControlName="folio">
+                </div>
+            </div>
+            <div class="col-6">
+
+                <div class="form-group">
+                    <label for="rfc">RFC:</label>
+                    <select class="form-select" formControlName="rfc" aria-label="Default select example">
+                        <option *ngFor="let item of empleados" value="{{item.id}}">{{item.rfc + ' - ' +item.nombre}}
+                        </option>
+                    </select>
+                </div>
+            </div>
         </div>
 
-        <div class="form-group">
-            <label for="rfc">RFC:</label>
-            <select class="form-select" formControlName="rfc" aria-label="Default select example">
-                <option *ngFor="let item of empleados" value="{{item.id}}">{{item.rfc + ' - ' +item.nombre}}</option>
-            </select>
+        <div class="row">
+            <div class="col-6">
+                <div class="form-group">
+                    <label for="fecha_inicio">Inicio de periodo:</label>
+                    <input type="date" class="form-control" id="fecha_inicio" formControlName="fecha_inicio">
+                </div>
+            </div>
+            <div class="col-6">
+                <div class="form-group">
+                    <label for="fecha_fin">Final de periodo:</label>
+                    <input type="date" class="form-control" id="fecha_fin" formControlName="fecha_fin">
+                </div>
+            </div>
         </div>
 
-        <div class="form-group">
-            <label for="fecha_inicio">Inicio de periodo:</label>
-            <input type="date" class="form-control" id="fecha_inicio" formControlName="fecha_inicio">
-        </div>
-        <div class="form-group">
-            <label for="fecha_fin">Final de periodo:</label>
-            <input type="date" class="form-control" id="fecha_fin" formControlName="fecha_fin">
-        </div>
-        <div class="form-group">
-            <label for="dias">Dias:</label>
-            <input type="number" class="form-control" id="dias" formControlName="dias">
-        </div>
-        <div class="form-group">
-            <label for="motivo">Motivo:</label>
-            <input type="text" class="form-control" id="motivo" formControlName="motivo">
-        </div>
-        <div class="form-group">
-            <label for="estatus">Estatus:</label>
-            <input type="number" class="form-control" id="estatus" formControlName="estatus">
+
+        <div class="row">
+            <div class="col-4">
+                <div class="form-group">
+                    <label for="dias">Dias:</label>
+                    <input type="number" class="form-control" id="dias" formControlName="dias">
+                </div>
+
+            </div>
+            <div class="col-4">
+                <div class="form-group">
+                    <label for="motivo">Motivo:</label>
+                    <input type="text" class="form-control" id="motivo" formControlName="motivo">
+                </div>
+
+            </div>
+            <div class="col-4">
+
+                <label for="estatus">Estatus:</label>
+                <select class="form-select" formControlName="estatus" id="estatus">
+                    <option value="1">Activa</option>
+                    <option value="2">Inactiva</option>
+                </select>
+
+            </div>
         </div>
     </form>
 </div>

@@ -6,57 +6,91 @@
 </div>
 <div class="modal-body">
     <form [formGroup]="formulario">
-        <div class="form-group">
-            <label for="nombre">Nombre:</label>
-            <input type="text" class="form-control" id="nombre" formControlName="nombre">
-        </div>
-        <div class="form-group">
-            <label for="clave">Clave:</label>
-            <input type="text" class="form-control" id="clave" formControlName="clave">
+
+        <div class="row">
+            <div class="col-4">
+                <div class="form-group">
+                    <label for="nombre">Nombre:</label>
+                    <input type="text" class="form-control" id="nombre" formControlName="nombre">
+                </div>
+            </div>
+            <div class="col-4">
+
+                <div class="form-group">
+                    <label for="clave">Clave:</label>
+                    <input type="text" class="form-control" id="clave" formControlName="clave">
+                </div>
+            </div>
+            <div class="col-4">
+                <div class="form-group">
+                    <label for="nss">NSS:</label>
+                    <input type="text" class="form-control" id="nss" formControlName="nss">
+                </div>
+
+            </div>
         </div>
 
-        <div class="form-group">
-            <label for="nss">NSS:</label>
-            <input type="text" class="form-control" id="nss" formControlName="nss">
+        <div class="row">
+            <div class="col-6">
+                <div class="form-group">
+                    <label for="puesto">Puesto:</label>
+                    <select class="form-select" formControlName="puesto" aria-label="Default select example">
+                        <option *ngFor="let item of puestos" value="{{item.id}}">{{item.nombre}}</option>
+                    </select>
+                </div>
+            </div>
+            <div class="col-6">
+                <div class="form-group">
+                    <label for="salario_diario">Salario diario:</label>
+                    <input type="number" class="form-control" id="salario_diario" readonly
+                        formControlName="salario_diario">
+                </div>
+            </div>
         </div>
-        
-        <div class="form-group">
-            <label for="puesto">Puesto:</label>
-            <select class="form-select" formControlName="puesto" aria-label="Default select example">
-                <option *ngFor="let item of puestos" value="{{item.id}}">{{item.nombre}}</option>
-            </select>
-        </div>
-        <div class="form-group">
-            <label for="salario_diario">Salario diario:</label>
-            <input type="number" class="form-control" id="salario_diario" formControlName="salario_diario">
-        </div>
-        <div class="form-group">
-            <label for="fecha_inicio">Fecha inicio:</label>
-            <input type="date" class="form-control" id="fecha_inicio" formControlName="fecha_inicio">
-        </div>
-        <div class="form-group">
-            <label for="tipo_contrato">Tipo de contrato:</label>
-            <select class="form-select" id="tipo_contrato" formControlName="tipo_contrato"
-                aria-label="Default select example">
-                <option *ngFor="let item of tipos_contratos" value="{{item.valor}}">{{item.nombre}}</option>
-            </select>
-        </div>
-        <div class="form-group">
-            <label for="metodo_pago">Metodo de pago:</label>
-            <select class="form-select" formControlName="metodo_pago" id="metodo_pago"
-                aria-label="Default select example">
-                <option *ngFor="let item of metodos_pago" value="{{item.valor}}">{{item.nombre}}</option>
-            </select>
-        </div>
-        <div class="form-group">
-            <label for="correo">Correo:</label>
-            <input type="text" class="form-control" id="correo" formControlName="correo">
 
-        </div>
-        <div class="form-group">
-            <label for="rfc">RFC:</label>
-            <input type="text" class="form-control" id="rfc" formControlName="rfc">
+        <div class="row">
+            <div class="col-4">
+                <div class="form-group">
+                    <label for="fecha_inicio">Fecha inicio:</label>
+                    <input type="date" class="form-control" id="fecha_inicio" formControlName="fecha_inicio">
+                </div>
+            </div>
+            <div class="col-4">
+                <div class="form-group">
+                    <label for="correo">Correo:</label>
+                    <input type="text" class="form-control" id="correo" formControlName="correo">
 
+                </div>
+            </div>
+            <div class="col-4">
+                <div class="form-group">
+                    <label for="rfc">RFC:</label>
+                    <input type="text" class="form-control" id="rfc" formControlName="rfc">
+                </div>
+
+            </div>
+        </div>
+
+
+        <div class="row">
+            <div class="col-6">
+                <div class="form-group">
+                    <label for="tipo_contrato">Tipo de contrato:</label>
+                    <select class="form-select" id="tipo_contrato" formControlName="tipo_contrato"
+                        aria-label="Default select example">
+                        <option *ngFor="let item of tipos_contratos" value="{{item.valor}}">{{item.nombre}}</option>
+                    </select>
+                </div>
+            </div>
+            <div class="col-6">
+                <div class="form-group">
+                    <label for="metodo_pago">Metodo de pago:</label>
+                    <select class="form-select" formControlName="metodo_pago" id="metodo_pago"
+                        aria-label="Default select example">
+                        <option *ngFor="let item of metodos_pago" value="{{item.valor}}">{{item.nombre}}</option>
+                    </select>
+                </div>
+            </div>
         </div>
 
     </form>

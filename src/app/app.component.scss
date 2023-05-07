@@ -1,3 +1,11 @@
 .gap-1 {
     gap: 1rem;
 }
+
+.wave{
+    position: absolute;
+    bottom: 0;
+    width: 100vw;
+
+    opacity: .1;
+}

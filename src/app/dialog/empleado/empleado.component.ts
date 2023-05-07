@@ -19,7 +19,7 @@ export class EmpleadoComponent {
     public modal: NgbActiveModal
   ) { }
 
-  
+
   public tipos_contratos = [
     { valor: "1", nombre: "Contrato temporal" },
     { valor: "2", nombre: "Contrato indefinido" },
@@ -51,6 +51,24 @@ export class EmpleadoComponent {
       puesto: ['', Validators.required],
       nss: ['', Validators.required]
     });
+
+    this.formulario.get('puesto').valueChanges.subscribe(puesto => {
+
+      const puestoSeleccionado = this.getPuesto(puesto)
+      
+
+      this.formulario.patchValue({
+        salario_diario: ( puestoSeleccionado.salario / 30).toFixed(2)
+      });
+
+    });
+
+
+  }
+
+  public getPuesto(id: string) : any {
+    const puesto =  this.puestos.find(element => element.id == id)
+    return puesto;
   }
 
   public getLocalStorageData() {
