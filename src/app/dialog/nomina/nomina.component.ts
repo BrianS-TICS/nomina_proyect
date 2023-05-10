@@ -4,6 +4,8 @@ import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable';
 import { v4 as uuidv4 } from 'uuid';
+import * as moment from 'moment';
+
 
 @Component({
   selector: 'app-nomina',
@@ -35,6 +37,7 @@ export class NominaComponent implements OnInit {
 
   public empleados = [];
   public puestos = [];
+  public incapacidades = [];
 
   public metodos_pago = [
     { valor: "1", nombre: "Efectivo" },
@@ -65,19 +68,59 @@ export class NominaComponent implements OnInit {
       const subtotalCalculo = Math.ceil(parseFloat(this.formulario.controls.dias_pagados.value || '0') * parseFloat(this.formulario.controls.salario_diario.value));
       this.subtotal = subtotalCalculo.toFixed(2)
 
+      const salario_diario = parseFloat(this.formulario.controls.salario_diario.value);
       const ISR = subtotalCalculo * .11
       const IMSS = subtotalCalculo * .023
       const INFONAVID = subtotalCalculo * .02
       const CajaAhorro = subtotalCalculo * .02
 
-      this.totalDeducciones = (ISR + CajaAhorro + IMSS + INFONAVID).toFixed(2)
+      const incapacidadesDeEmpleado = this.incapacidades.filter(item => item.id_empleado == this.empleado.id);
+
+      let deduccionPorIncapacidad = 0
+
+      if (incapacidadesDeEmpleado.length) {
+        const incapacidad_inicio = incapacidadesDeEmpleado[0].fecha_inicio
+        const incapacidad_fin = incapacidadesDeEmpleado[0].fecha_fin
+        const periodo_inicio = this.formulario.controls.fecha_inicio.value
+        const periodo_fin = this.formulario.controls.fecha_fin.value
+
+        console.log(incapacidad_inicio);
+        console.log(incapacidad_fin);
+        console.log(periodo_inicio);
+        console.log(periodo_fin);
+
+        // CALCULO DE DIAS
+
+        const fechaInicioPeriodo = moment(periodo_inicio);
+        const fechaFinPeriodo = moment(periodo_fin);
+
+        const fechaInicioIncapacidad = moment(incapacidad_inicio);
+        const fechaFinIncapacidad = moment(incapacidad_fin);
+
+        // Encontrar la fecha de inicio común entre los dos periodos
+        const fechaInicioComun = moment.max(fechaInicioPeriodo, fechaInicioIncapacidad);
+
+        // Encontrar la fecha de fin común entre los dos periodos
+        const fechaFinComun = moment.min(fechaFinPeriodo, fechaFinIncapacidad);
+
+        // Calcular la diferencia en días entre las fechas comunes
+        const diasIncapacidadDentroPeriodo = fechaFinComun.diff(fechaInicioComun, 'days') + 1;
+
+        deduccionPorIncapacidad = diasIncapacidadDentroPeriodo * salario_diario;
+      }
+
+
+      this.totalDeducciones = (ISR + CajaAhorro + IMSS + INFONAVID + deduccionPorIncapacidad ? deduccionPorIncapacidad : 0).toFixed(2)
 
       this.deducciones = [
         { valor: "1", nombre: "ISR", cantidad: ISR },
         { valor: "2", nombre: "IMSS", cantidad: IMSS },
         { valor: "3", nombre: "INFONAVID", cantidad: INFONAVID },
         { valor: "4", nombre: "Caja de ahorro", cantidad: CajaAhorro },
+        deduccionPorIncapacidad ? { valor: "5", nombre: "Incapacidad", cantidad: deduccionPorIncapacidad } : null
       ]
+
+
 
       const puntualidad = 300
       const vales = 200
@@ -147,6 +190,11 @@ export class NominaComponent implements OnInit {
     const empleadosStr = localStorage['empleados'];
     if (empleadosStr) {
       this.empleados = JSON.parse(empleadosStr);
+    }
+
+    const incapacidadesStr = localStorage['incapacidades'];
+    if (incapacidadesStr) {
+      this.incapacidades = JSON.parse(incapacidadesStr);
     }
   }
 

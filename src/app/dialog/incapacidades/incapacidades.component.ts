@@ -47,7 +47,7 @@ export class IncapacidadesComponent implements OnInit {
       const incapacidad = {
         id : uuidv4(),
         folio: this.formulario.get('folio').value,
-        rfc: this.formulario.get('rfc').value,
+        id_empleado: this.formulario.get('rfc').value,
         fecha_inicio: this.formulario.get('fecha_inicio').value,
         fecha_fin: this.formulario.get('fecha_fin').value,
         dias: this.formulario.get('dias').value,

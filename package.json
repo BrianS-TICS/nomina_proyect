@@ -25,6 +25,7 @@
     "csvtojson": "^2.0.10",
     "jspdf": "^2.5.1",
     "jspdf-autotable": "^3.5.28",
+    "moment": "^2.29.4",
     "pdfmake": "^0.2.7",
     "rxjs": "~7.5.0",
     "tslib": "^2.3.0",

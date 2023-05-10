@@ -1,21 +1,17 @@
 <div>
 
-  <ul class="nav p-4">
-    <li class="nav-item">
-      <a class="nav-link" (click)="CURRENTPAGE = 1" aria-current="page" href="#">Nominas</a>
-    </li>
-    <li class="nav-item">
-      <a class="nav-link" (click)="CURRENTPAGE = 2" href="#">Empleados</a>
-    </li>
-    <li class="nav-item">
-      <a class="nav-link" (click)="CURRENTPAGE = 3" href="#">Incapacidades medicas</a>
-    </li>
-
-    <li class="nav-item">
-      <a class="nav-link" (click)="CURRENTPAGE = 4" href="#">Negocio</a>
-    </li>
-
-  </ul>
+  <!-- As a heading -->
+  <nav class="navbar bg-primary bg-body-tertiary d-flex p-3">
+    <div class="container-fluid">
+      <a class="navbar-brand cursor-pointer fw-semibold">LocalNomina</a>
+      <div class="d-flex float-end">
+        <a (click)="CURRENTPAGE = 1" class="navbar-brand cursor-pointer fs-6">Nominas</a>
+        <a (click)="CURRENTPAGE = 2" class="navbar-brand cursor-pointer	fs-6">Empleados</a>
+        <a (click)="CURRENTPAGE = 3" class="navbar-brand cursor-pointer	fs-6">Incapacidades medicas</a>
+        <a (click)="CURRENTPAGE = 4" class="navbar-brand cursor-pointer	fs-6">Negocio</a>
+      </div>
+    </div>
+  </nav>
 
   <!-- Nominas -->
   <section *ngIf="CURRENTPAGE == 1" class="container mt-5">
@@ -135,7 +131,7 @@
         <tr *ngFor="let item of incapacidades; let index = index">
           <th>{{index+1}}</th>
           <td>{{item.folio}}</td>
-          <td>{{findRfcEmpleado(item.rfc)}}</td>
+          <td>{{findRfcEmpleado(item.id_empleado)}}</td>
           <td>{{item.fecha_inicio + ' - ' + item.fecha_fin}}</td>
           <td>{{item.dias}}</td>
           <td>{{item.motivo}}</td>
@@ -225,9 +221,10 @@
       </div>
     </div>
 
-    
+
   </section>
 
-
-  <img src="assets/wave.svg" class="wave" alt="">
+  <footer class="bg-primary mt-5 px-5 py-3">
+    <p class="text-center m-0 text-light">Tecnologías: Angular.js | LocalStorage | Bootstrap</p>
+  </footer>
 </div>
