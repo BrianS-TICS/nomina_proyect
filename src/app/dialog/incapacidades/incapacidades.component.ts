@@ -33,7 +33,7 @@ export class IncapacidadesComponent implements OnInit {
     });
   }
 
-  
+
   public getLocalStorageData() {
 
     const empleadosStr = localStorage['empleados'];
@@ -64,6 +64,8 @@ export class IncapacidadesComponent implements OnInit {
       } else {
         incapacidades.push(incapacidad)
       }
+
+      this.getLocalStorageData()
 
       localStorage.setItem('incapacidades', JSON.stringify(incapacidades));
 

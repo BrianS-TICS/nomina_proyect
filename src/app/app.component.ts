@@ -68,8 +68,8 @@ export class AppComponent {
   constructor(private modalService: NgbModal) {
     this.fileCharged = null
     this.CSVData = null
-
     this.getLocalStorageData();
+    console.log(this.incapacidades)
   }
 
   public onFileSelected(event: any) {
@@ -236,18 +236,30 @@ export class AppComponent {
   public openEmpleadoDialog() {
     const modalRef = this.modalService.open(EmpleadoComponent, { size: 'lg' });
     modalRef.componentInstance.variable = 'valor';
+    modalRef.closed.subscribe(() => {
+      this.getLocalStorageData();
+    })
   }
 
   public openIncapacidadesDialog() {
     const modalRef = this.modalService.open(IncapacidadesComponent, { size: 'lg' });
+    modalRef.closed.subscribe(() => {
+      this.getLocalStorageData();
+    })
   }
 
   public openNominaDialog() {
     const modalRef = this.modalService.open(NominaComponent, { size: 'lg' });
+    modalRef.closed.subscribe(() => {
+      this.getLocalStorageData();
+    })
   }
 
   public openPuestoDialog() {
     const modalRef = this.modalService.open(PuestoComponent);
+    modalRef.closed.subscribe(() => {
+      this.getLocalStorageData();
+    })
   }
 
 
@@ -257,13 +269,8 @@ export class AppComponent {
 
     const puesto = this.findAllPuestoData(this.CSVData[0].id_puesto)
     const empleado = this.findEmpleado(this.CSVData[0].id_empleado)
-    console.log(this.CSVData);
-    console.log(puesto);
-    console.log(empleado);
-
-    const salarioDiario = (empleado.salario_diario / 30).toFixed(2)
-
-    const subtotalCalculo = Math.ceil(parseFloat(this.CSVData.dias_trabajados || '0') * parseFloat(salarioDiario));
+    const salarioDiario = (puesto.salario / 30).toFixed(2)
+    const subtotalCalculo = Math.ceil(parseFloat(this.CSVData[0].dias_trabajados) * parseFloat(salarioDiario));
 
     const salario_diario = parseFloat(salarioDiario)
     const ISR = subtotalCalculo * .11
@@ -271,53 +278,65 @@ export class AppComponent {
     const INFONAVID = subtotalCalculo * .02
     const CajaAhorro = subtotalCalculo * .02
 
-    const incapacidadesDeEmpleado = this.incapacidades.filter(item => item.id_empleado == this.CSVData.id_empleado);
+    const incapacidadesDeEmpleado = this.incapacidades.filter(item => item.id_empleado == this.CSVData[0].id_empleado);
 
     let deduccionPorIncapacidad = 0
 
     if (incapacidadesDeEmpleado.length) {
       const incapacidad_inicio = incapacidadesDeEmpleado[0].fecha_inicio
       const incapacidad_fin = incapacidadesDeEmpleado[0].fecha_fin
-      const periodo_inicio = this.CSVData.fecha_inicio
-      const periodo_fin = this.CSVData.fecha_fin
+      const periodo_inicio = this.CSVData[0].fecha_inicio
+      const periodo_fin = this.CSVData[0].fecha_fin
 
-        // CALCULO DE DIAS
+      // CALCULO DE DIAS
       const fechaInicioPeriodo = moment(periodo_inicio);
       const fechaFinPeriodo = moment(periodo_fin);
 
       const fechaInicioIncapacidad = moment(incapacidad_inicio);
       const fechaFinIncapacidad = moment(incapacidad_fin);
 
-        // Encontrar la fecha de inicio común entre los dos periodos
+      // Encontrar la fecha de inicio común entre los dos periodos
       const fechaInicioComun = moment.max(fechaInicioPeriodo, fechaInicioIncapacidad);
 
-        // Encontrar la fecha de fin común entre los dos periodos
+      // Encontrar la fecha de fin común entre los dos periodos
       const fechaFinComun = moment.min(fechaFinPeriodo, fechaFinIncapacidad);
 
-        // Calcular la diferencia en días entre las fechas comunes
+      // Calcular la diferencia en días entre las fechas comunes
       const diasIncapacidadDentroPeriodo = fechaFinComun.diff(fechaInicioComun, 'days') + 1;
 
       deduccionPorIncapacidad = diasIncapacidadDentroPeriodo * salario_diario;
     }
 
 
-    const totalDeducciones = (ISR + CajaAhorro + IMSS + INFONAVID + deduccionPorIncapacidad ? deduccionPorIncapacidad : 0).toFixed(2)
+    const totalDeducciones = (ISR + CajaAhorro + IMSS + INFONAVID + (deduccionPorIncapacidad ? deduccionPorIncapacidad : 0)).toFixed(2)
 
-    const deducciones = [
-      { valor: "1", nombre: "ISR", cantidad: ISR },
-      { valor: "2", nombre: "IMSS", cantidad: IMSS },
-      { valor: "3", nombre: "INFONAVID", cantidad: INFONAVID },
-      { valor: "4", nombre: "Caja de ahorro", cantidad: CajaAhorro },
-      deduccionPorIncapacidad ? { valor: "5", nombre: "Incapacidad", cantidad: deduccionPorIncapacidad } : null
-    ]
 
-    const puntualidad = 300
-    const vales = 200
-    const compensasiones = subtotalCalculo * .02
-    const vacaciones = subtotalCalculo * .01
-    const sueldoBase = subtotalCalculo
+    let deducciones;
+
+    if (deduccionPorIncapacidad) {
+      deducciones = [
+        { valor: "1", nombre: "ISR", cantidad: ISR },
+        { valor: "2", nombre: "IMSS", cantidad: IMSS },
+        { valor: "3", nombre: "INFONAVID", cantidad: INFONAVID },
+        { valor: "4", nombre: "Caja de ahorro", cantidad: CajaAhorro },
+        deduccionPorIncapacidad ? { valor: "5", nombre: "Incapacidad", cantidad: deduccionPorIncapacidad } : null
+      ]
+    } else {
+      deducciones = [
+        { valor: "1", nombre: "ISR", cantidad: ISR },
+        { valor: "2", nombre: "IMSS", cantidad: IMSS },
+        { valor: "3", nombre: "INFONAVID", cantidad: INFONAVID },
+        { valor: "4", nombre: "Caja de ahorro", cantidad: CajaAhorro },
+      ]
+    }
+
+    const puntualidad = 300;
+    const vales = 200;
+    const compensasiones = subtotalCalculo * .02;
+    const vacaciones = subtotalCalculo * .01;
+    const sueldoBase = subtotalCalculo;
+
     const totalPersepciones = (sueldoBase + vacaciones + vacaciones + compensasiones + vales + puntualidad).toFixed(2)
-
 
     const percepciones = [
       { valor: "1", nombre: "Sueldo base", cantidad: subtotalCalculo },
@@ -329,29 +348,28 @@ export class AppComponent {
 
     const total = (parseFloat(totalPersepciones) - parseFloat(totalDeducciones)).toFixed(2)
 
-    
     const fechaActual = new Date();
     const fechaFormateada = fechaActual.toISOString().slice(0, 10);
 
     const nomina = {
       id: uuidv4(),
       fecha_creacion: fechaFormateada,
-      fecha_inicio: this.formulario.get('fecha_inicio').value,
-      fecha_fin: this.formulario.get('fecha_fin').value,
-      puesto: this.formulario.get('puesto').value,
-      metodo_pago: this.formulario.get('metodo_pago').value,
-      rfc: this.formulario.get('rfc').value,
-      nss: this.formulario.get('nss').value,
-      dias_pagados: this.formulario.get('dias_pagados').value,
-      salario_diario: this.formulario.get('salario_diario').value,
-      total_percepciones: this.totalPersepciones,
-      total_deducciones: this.totalDeducciones,
-      total: this.total,
-      subtotal: this.subtotal,
-      percepciones: this.percepciones,
-      deducciones: this.deducciones,
-      folio: this.formulario.get('folio').value,
-      nombre: this.formulario.get('nombre').value
+      fecha_inicio: this.CSVData[0].fecha_inicio,
+      fecha_fin: this.CSVData[0].fecha_fin,
+      puesto: puesto.nombre,
+      metodo_pago: empleado.metodo_pago,
+      rfc: empleado.rfc,
+      nss: empleado.nss,
+      dias_pagados: 15,
+      salario_diario: salario_diario,
+      total_percepciones: totalPersepciones,
+      total_deducciones: totalDeducciones,
+      total: total,
+      subtotal: subtotalCalculo,
+      percepciones: percepciones,
+      deducciones: deducciones,
+      folio: uuidv4(),
+      nombre: empleado.nombre
     };
 
 
@@ -365,6 +383,7 @@ export class AppComponent {
       nominas.push(nomina)
     }
 
+    this.getLocalStorageData();
     localStorage.setItem('nominas', JSON.stringify(nominas));
 
   }

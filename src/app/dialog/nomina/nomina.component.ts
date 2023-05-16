@@ -104,15 +104,24 @@ export class NominaComponent implements OnInit {
       }
 
 
-      this.totalDeducciones = (ISR + CajaAhorro + IMSS + INFONAVID + deduccionPorIncapacidad ? deduccionPorIncapacidad : 0).toFixed(2)
+      this.totalDeducciones = (ISR + CajaAhorro + IMSS + INFONAVID + (deduccionPorIncapacidad ? deduccionPorIncapacidad : 0)).toFixed(2)
 
-      this.deducciones = [
-        { valor: "1", nombre: "ISR", cantidad: ISR },
-        { valor: "2", nombre: "IMSS", cantidad: IMSS },
-        { valor: "3", nombre: "INFONAVID", cantidad: INFONAVID },
-        { valor: "4", nombre: "Caja de ahorro", cantidad: CajaAhorro },
-        deduccionPorIncapacidad ? { valor: "5", nombre: "Incapacidad", cantidad: deduccionPorIncapacidad } : null
-      ]
+      if (deduccionPorIncapacidad) {
+        this.deducciones = [
+          { valor: "1", nombre: "ISR", cantidad: ISR },
+          { valor: "2", nombre: "IMSS", cantidad: IMSS },
+          { valor: "3", nombre: "INFONAVID", cantidad: INFONAVID },
+          { valor: "4", nombre: "Caja de ahorro", cantidad: CajaAhorro },
+          deduccionPorIncapacidad ? { valor: "5", nombre: "Incapacidad", cantidad: deduccionPorIncapacidad } : null
+        ]
+      } else {
+        this.deducciones = [
+          { valor: "1", nombre: "ISR", cantidad: ISR },
+          { valor: "2", nombre: "IMSS", cantidad: IMSS },
+          { valor: "3", nombre: "INFONAVID", cantidad: INFONAVID },
+          { valor: "4", nombre: "Caja de ahorro", cantidad: CajaAhorro },
+        ]
+      }
 
       const puntualidad = 300
       const vales = 200

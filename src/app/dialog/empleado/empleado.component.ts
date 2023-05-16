@@ -55,7 +55,7 @@ export class EmpleadoComponent {
     this.formulario.get('puesto').valueChanges.subscribe(puesto => {
 
       const puestoSeleccionado = this.getPuesto(puesto)
-      
+
 
       this.formulario.patchValue({
         salario_diario: ( puestoSeleccionado.salario / 30).toFixed(2)
@@ -105,6 +105,8 @@ export class EmpleadoComponent {
       } else {
         empleados.push(empleado)
       }
+
+      this.getLocalStorageData()
 
       localStorage.setItem('empleados', JSON.stringify(empleados));
 
