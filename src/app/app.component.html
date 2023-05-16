@@ -60,6 +60,18 @@
       <input class="mt-5 btn btn-primary" type="button" value="Añadir nomina" (click)="openNominaDialog()">
     </div>
 
+    <section class="mt-5">
+      <h1 class="primary">CSV a nomina</h1>
+      <p>Sube un archivo CSV para calcular automaticamente tu nomina en un PDF</p>
+
+      <div class="mb-3">
+        <label for="formFile" class="form-label">Default file input example</label>
+        <input (change)="onFileSelected($event)" accept=".csv" class="form-control" type="file" id="formFile">
+        <input class="mt-5 btn btn-primary" type="button" (click)="this.makePdf()" value="Calcular nomina">
+      </div>
+
+    </section>
+
   </section>
 
   <!-- Empleados -->
@@ -131,7 +143,7 @@
         <tr *ngFor="let item of incapacidades; let index = index">
           <th>{{index+1}}</th>
           <td>{{item.folio}}</td>
-          <td>{{findRfcEmpleado(item.id_empleado)}}</td>
+          <td>{{findRfcEmpleado(item.rfc)}}</td>
           <td>{{item.fecha_inicio + ' - ' + item.fecha_fin}}</td>
           <td>{{item.dias}}</td>
           <td>{{item.motivo}}</td>
@@ -223,6 +235,8 @@
 
 
   </section>
+
+
 
   <footer class="bg-primary mt-5 px-5 py-3">
     <p class="text-center m-0 text-light">Tecnologías: Angular.js | LocalStorage | Bootstrap | Moment.js</p>
