@@ -39,6 +39,8 @@ export class NominaComponent implements OnInit {
   public puestos = [];
   public incapacidades = [];
 
+  private dias_incapacidad = 0;
+
   public metodos_pago = [
     { valor: "1", nombre: "Efectivo" },
     { valor: "2", nombre: "Cheques" },
@@ -98,9 +100,9 @@ export class NominaComponent implements OnInit {
         const fechaFinComun = moment.min(fechaFinPeriodo, fechaFinIncapacidad);
 
         // Calcular la diferencia en días entre las fechas comunes
-        const diasIncapacidadDentroPeriodo = fechaFinComun.diff(fechaInicioComun, 'days') + 1;
+        this.dias_incapacidad = fechaFinComun.diff(fechaInicioComun, 'days') + 1;
 
-        deduccionPorIncapacidad = diasIncapacidadDentroPeriodo * salario_diario;
+        deduccionPorIncapacidad = this.dias_incapacidad * salario_diario;
       }
 
 
@@ -108,18 +110,18 @@ export class NominaComponent implements OnInit {
 
       if (deduccionPorIncapacidad) {
         this.deducciones = [
-          { valor: "1", nombre: "ISR", cantidad: ISR },
-          { valor: "2", nombre: "IMSS", cantidad: IMSS },
-          { valor: "3", nombre: "INFONAVID", cantidad: INFONAVID },
-          { valor: "4", nombre: "Caja de ahorro", cantidad: CajaAhorro },
+          { valor: "1", nombre: "ISR (11%)", cantidad: ISR },
+          { valor: "2", nombre: "IMSS (2.3%)", cantidad: IMSS },
+          { valor: "3", nombre: "INFONAVID (2%)", cantidad: INFONAVID },
+          { valor: "4", nombre: "Caja de ahorro (2%)", cantidad: CajaAhorro },
           deduccionPorIncapacidad ? { valor: "5", nombre: "Incapacidad", cantidad: deduccionPorIncapacidad } : null
         ]
       } else {
         this.deducciones = [
-          { valor: "1", nombre: "ISR", cantidad: ISR },
-          { valor: "2", nombre: "IMSS", cantidad: IMSS },
-          { valor: "3", nombre: "INFONAVID", cantidad: INFONAVID },
-          { valor: "4", nombre: "Caja de ahorro", cantidad: CajaAhorro },
+          { valor: "1", nombre: "ISR (11%)", cantidad: ISR },
+          { valor: "2", nombre: "IMSS (2.3%)", cantidad: IMSS },
+          { valor: "3", nombre: "INFONAVID (2%)", cantidad: INFONAVID },
+          { valor: "4", nombre: "Caja de ahorro (2%)", cantidad: CajaAhorro },
         ]
       }
 
@@ -133,10 +135,10 @@ export class NominaComponent implements OnInit {
 
       this.percepciones = [
         { valor: "1", nombre: "Sueldo base", cantidad: subtotalCalculo },
-        { valor: "2", nombre: "Puntualidad", cantidad: puntualidad },
-        { valor: "3", nombre: "Vales de despensa", cantidad: vales },
-        { valor: "4", nombre: "Compensaciones", cantidad: compensasiones },
-        { valor: "5", nombre: "Vacaciones", cantidad: vacaciones },
+        { valor: "2", nombre: "Puntualidad (300)", cantidad: puntualidad },
+        { valor: "3", nombre: "Vales de despensa (200)", cantidad: vales },
+        { valor: "4", nombre: "Compensaciones (2%)", cantidad: compensasiones },
+        { valor: "5", nombre: "Vacaciones (1%)", cantidad: vacaciones },
       ]
 
       this.total = (parseFloat(this.totalPersepciones) - parseFloat(this.totalDeducciones)).toFixed(2)
@@ -223,7 +225,8 @@ export class NominaComponent implements OnInit {
         percepciones: this.percepciones,
         deducciones: this.deducciones,
         folio: this.formulario.get('folio').value,
-        nombre: this.formulario.get('nombre').value
+        nombre: this.formulario.get('nombre').value,
+        dias_incapacidad : this.dias_incapacidad
       };
 
       let nominas = []

@@ -31,7 +31,6 @@ export class AppComponent {
   public nominas = [];
 
 
-
   public tipos_contratos = [
     { valor: "1", nombre: "Contrato temporal" },
     { valor: "2", nombre: "Contrato indefinido" },
@@ -69,7 +68,6 @@ export class AppComponent {
     this.fileCharged = null
     this.CSVData = null
     this.getLocalStorageData();
-    console.log(this.incapacidades)
   }
 
   public onFileSelected(event: any) {
@@ -151,13 +149,14 @@ export class AppComponent {
       content: [
         { text: 'Recibo de pago', style: 'header' },
         { text: `Folio: ${objeto.folio}`, style: 'datos' },
-        { text: `Periodo: ${objeto.fecha_fin} a ${objeto.fecha_fin}`, style: 'datos' },
+        { text: `Periodo: ${objeto.fecha_inicio} a ${objeto.fecha_fin}`, style: 'datos' },
         { text: 'Datos del empleado', style: 'subheader' },
         { text: `Nombre: ${objeto.nombre}`, style: 'datos' },
         { text: `RFC: ${objeto.rfc}`, style: 'datos' },
         { text: `NSS: ${objeto.nss}`, style: 'datos' },
         { text: `Puesto: ${objeto.puesto}`, style: 'datos' },
         { text: `Salario diario: ${objeto.salario_diario}`, style: 'datos' },
+        { text: `Dias de incapacidad: ${objeto.dias_incapacidad}`, style: 'datos' },
         { text: `Dias pagados: ${objeto.dias_pagados}`, style: 'datos' },
         { text: `Método de pago: ${objeto.metodo_pago}`, style: 'datos' },
         { text: 'Percepciones', style: 'subheader' },
@@ -269,44 +268,47 @@ export class AppComponent {
 
     const puesto = this.findAllPuestoData(this.CSVData[0].id_puesto)
     const empleado = this.findEmpleado(this.CSVData[0].id_empleado)
-    const salarioDiario = (puesto.salario / 30).toFixed(2)
-    const subtotalCalculo = Math.ceil(parseFloat(this.CSVData[0].dias_trabajados) * parseFloat(salarioDiario));
+    const salarioDiarioStr = (puesto.salario / 30).toFixed(2)
 
-    const salario_diario = parseFloat(salarioDiario)
+    const moment = require('moment');
+    const formatoFecha = 'DD/MM/YYYY';
+
+    const incapacidad_inicio = this.CSVData[0].fecha_inicio
+    const incapacidad_fin = this.CSVData[0].fecha_fin
+
+    const periodo_inicio = this.CSVData[0].periodo_inicio
+    const periodo_fin = this.CSVData[0].periodo_fin
+
+    // CALCULO DE DIAS
+    const fechaInicioPeriodo = moment(periodo_inicio, formatoFecha);
+    const fechaFinPeriodo = moment(periodo_fin, formatoFecha);
+
+    const fechaInicioIncapacidad = moment(incapacidad_inicio, formatoFecha);
+    const fechaFinIncapacidad = moment(incapacidad_fin, formatoFecha);
+
+    // Encontrar la fecha de inicio común entre los dos periodos
+    const fechaInicioComun = moment.max(fechaInicioPeriodo, fechaInicioIncapacidad);
+
+    // Encontrar la fecha de fin común entre los dos periodos
+    const fechaFinComun = moment.min(fechaFinPeriodo, fechaFinIncapacidad);
+
+    // Calcular la diferencia en días entre las fechas comunes
+    const diasIncapacidadDentroPeriodo = fechaFinComun.diff(fechaInicioComun, 'days') + 1;
+
+    let diasDePeriodo = fechaInicioPeriodo.diff(fechaFinPeriodo, 'days') - 1;
+    diasDePeriodo = Math.abs(diasDePeriodo)
+
+    const diasPagados = this.CSVData[0].dias_trabajados - diasIncapacidadDentroPeriodo;
+    console.log(diasDePeriodo)
+    const subtotalCalculo = Math.ceil(diasDePeriodo * parseFloat(salarioDiarioStr));
+
+    const salarioDiario = parseFloat(salarioDiarioStr)
     const ISR = subtotalCalculo * .11
     const IMSS = subtotalCalculo * .023
     const INFONAVID = subtotalCalculo * .02
     const CajaAhorro = subtotalCalculo * .02
 
-    const incapacidadesDeEmpleado = this.incapacidades.filter(item => item.id_empleado == this.CSVData[0].id_empleado);
-
-    let deduccionPorIncapacidad = 0
-
-    if (incapacidadesDeEmpleado.length) {
-      const incapacidad_inicio = incapacidadesDeEmpleado[0].fecha_inicio
-      const incapacidad_fin = incapacidadesDeEmpleado[0].fecha_fin
-      const periodo_inicio = this.CSVData[0].fecha_inicio
-      const periodo_fin = this.CSVData[0].fecha_fin
-
-      // CALCULO DE DIAS
-      const fechaInicioPeriodo = moment(periodo_inicio);
-      const fechaFinPeriodo = moment(periodo_fin);
-
-      const fechaInicioIncapacidad = moment(incapacidad_inicio);
-      const fechaFinIncapacidad = moment(incapacidad_fin);
-
-      // Encontrar la fecha de inicio común entre los dos periodos
-      const fechaInicioComun = moment.max(fechaInicioPeriodo, fechaInicioIncapacidad);
-
-      // Encontrar la fecha de fin común entre los dos periodos
-      const fechaFinComun = moment.min(fechaFinPeriodo, fechaFinIncapacidad);
-
-      // Calcular la diferencia en días entre las fechas comunes
-      const diasIncapacidadDentroPeriodo = fechaFinComun.diff(fechaInicioComun, 'days') + 1;
-
-      deduccionPorIncapacidad = diasIncapacidadDentroPeriodo * salario_diario;
-    }
-
+    const deduccionPorIncapacidad = diasIncapacidadDentroPeriodo * salarioDiario;
 
     const totalDeducciones = (ISR + CajaAhorro + IMSS + INFONAVID + (deduccionPorIncapacidad ? deduccionPorIncapacidad : 0)).toFixed(2)
 
@@ -315,18 +317,18 @@ export class AppComponent {
 
     if (deduccionPorIncapacidad) {
       deducciones = [
-        { valor: "1", nombre: "ISR", cantidad: ISR },
-        { valor: "2", nombre: "IMSS", cantidad: IMSS },
-        { valor: "3", nombre: "INFONAVID", cantidad: INFONAVID },
-        { valor: "4", nombre: "Caja de ahorro", cantidad: CajaAhorro },
+        { valor: "1", nombre: "ISR (11%)", cantidad: ISR },
+        { valor: "2", nombre: "IMSS (2.3%)", cantidad: IMSS },
+        { valor: "3", nombre: "INFONAVID (2%)", cantidad: INFONAVID },
+        { valor: "4", nombre: "Caja de ahorro (2%)", cantidad: CajaAhorro },
         deduccionPorIncapacidad ? { valor: "5", nombre: "Incapacidad", cantidad: deduccionPorIncapacidad } : null
       ]
     } else {
       deducciones = [
-        { valor: "1", nombre: "ISR", cantidad: ISR },
-        { valor: "2", nombre: "IMSS", cantidad: IMSS },
-        { valor: "3", nombre: "INFONAVID", cantidad: INFONAVID },
-        { valor: "4", nombre: "Caja de ahorro", cantidad: CajaAhorro },
+        { valor: "1", nombre: "ISR (11%)", cantidad: ISR },
+        { valor: "2", nombre: "IMSS (2.3%)", cantidad: IMSS },
+        { valor: "3", nombre: "INFONAVID (2%)", cantidad: INFONAVID },
+        { valor: "4", nombre: "Caja de ahorro (2%)", cantidad: CajaAhorro },
       ]
     }
 
@@ -340,10 +342,10 @@ export class AppComponent {
 
     const percepciones = [
       { valor: "1", nombre: "Sueldo base", cantidad: subtotalCalculo },
-      { valor: "2", nombre: "Puntualidad", cantidad: puntualidad },
-      { valor: "3", nombre: "Vales de despensa", cantidad: vales },
-      { valor: "4", nombre: "Compensaciones", cantidad: compensasiones },
-      { valor: "5", nombre: "Vacaciones", cantidad: vacaciones },
+      { valor: "2", nombre: "Puntualidad (300)", cantidad: puntualidad },
+      { valor: "3", nombre: "Vales de despensa (200)", cantidad: vales },
+      { valor: "4", nombre: "Compensaciones (2%)", cantidad: compensasiones },
+      { valor: "5", nombre: "Vacaciones (1%)", cantidad: vacaciones },
     ]
 
     const total = (parseFloat(totalPersepciones) - parseFloat(totalDeducciones)).toFixed(2)
@@ -354,14 +356,15 @@ export class AppComponent {
     const nomina = {
       id: uuidv4(),
       fecha_creacion: fechaFormateada,
-      fecha_inicio: this.CSVData[0].fecha_inicio,
-      fecha_fin: this.CSVData[0].fecha_fin,
+      fecha_inicio: this.CSVData[0].periodo_inicio,
+      fecha_fin: this.CSVData[0].periodo_fin,
       puesto: puesto.nombre,
-      metodo_pago: empleado.metodo_pago,
+      dias_incapacidad: diasIncapacidadDentroPeriodo,
+      metodo_pago: this.findMetodoPago(empleado.metodo_pago),
       rfc: empleado.rfc,
       nss: empleado.nss,
-      dias_pagados: 15,
-      salario_diario: salario_diario,
+      dias_pagados: diasPagados,
+      salario_diario: salarioDiario,
       total_percepciones: totalPersepciones,
       total_deducciones: totalDeducciones,
       total: total,
@@ -383,8 +386,8 @@ export class AppComponent {
       nominas.push(nomina)
     }
 
-    this.getLocalStorageData();
     localStorage.setItem('nominas', JSON.stringify(nominas));
+    this.getLocalStorageData();
 
   }
 

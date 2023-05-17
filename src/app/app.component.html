@@ -65,7 +65,7 @@
       <p>Sube un archivo CSV para calcular automaticamente tu nomina en un PDF</p>
 
       <div class="mb-3">
-        <label for="formFile" class="form-label">Default file input example</label>
+        <label for="formFile" class="form-label">Elige un archivo csv</label>
         <input (change)="onFileSelected($event)" accept=".csv" class="form-control" type="file" id="formFile">
         <input class="mt-5 btn btn-primary" type="button" (click)="this.makePdf()" value="Calcular nomina">
       </div>
@@ -239,6 +239,6 @@
 
 
   <footer class="bg-primary mt-5 px-5 py-3">
-    <p class="text-center m-0 text-light">Tecnologías: Angular.js | LocalStorage | Bootstrap | Moment.js</p>
+    <p class="text-center m-0 text-light">Tecnologías: Angular.js | LocalStorage | Bootstrap | Moment.js | Uuidv4</p>
   </footer>
 </div>
