@@ -60,14 +60,24 @@
       <input class="mt-5 btn btn-primary" type="button" value="Añadir nomina" (click)="openNominaDialog()">
     </div>
 
-    <section class="mt-5">
-      <h1 class="primary">CSV a nomina</h1>
-      <p>Sube un archivo CSV para calcular automaticamente tu nomina en un PDF</p>
+    <section class="row mt-5">
 
-      <div class="mb-3">
-        <label for="formFile" class="form-label">Elige un archivo csv</label>
-        <input (change)="onFileSelected($event)" accept=".csv" class="form-control" type="file" id="formFile">
-        <input class="mt-5 btn btn-primary" type="button" (click)="this.makePdf()" value="Calcular nomina">
+      <div class="col-8">
+        <h1 class="primary">CSV a nomina</h1>
+        <p>Sube un archivo CSV para calcular automaticamente tu nomina en un PDF</p>
+        <div class="mb-3">
+          <label for="formFile" class="form-label">Elige un archivo csv</label>
+          <input (change)="onFileSelected($event)" accept=".csv" class="form-control" type="file" id="formFile">
+          <input class="mt-5 btn btn-primary" type="button" (click)="this.makePdf()" value="Calcular nomina">
+        </div>
+      </div>
+
+      <div class="col-4">
+        <h3 class="primary">Estructura de CSV</h3>
+        <p>Este archivo contiene el formato que se debe de usar para usar "CSV a nomina"</p>
+        <button (click)="descargarArchivo()" class="btn btn-outline-primary" type="button">
+          Descargar
+        </button>
       </div>
 
     </section>

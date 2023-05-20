@@ -261,6 +261,22 @@ export class AppComponent {
     })
   }
 
+  public descargarArchivo() {
+    // Crea un enlace de descarga
+    let enlace = document.createElement('a');
+    enlace.href = '/assets/example.csv'; // Reemplaza 'ruta_del_archivo' con la URL del archivo que deseas descargar
+    enlace.download = 'example.csv'; // Reemplaza 'nombre_del_archivo' con el nombre que deseas asignarle al archivo descargado
+
+    // Agrega el enlace al documento
+    document.body.appendChild(enlace);
+
+    // Simula un clic en el enlace para descargar el archivo
+    enlace.click();
+
+    // Remueve el enlace del documento
+    document.body.removeChild(enlace);
+
+  }
 
 
 
@@ -298,7 +314,7 @@ export class AppComponent {
     let diasDePeriodo = fechaInicioPeriodo.diff(fechaFinPeriodo, 'days') - 1;
     diasDePeriodo = Math.abs(diasDePeriodo)
 
-    const diasPagados = this.CSVData[0].dias_trabajados - diasIncapacidadDentroPeriodo;
+    const diasPagados = diasDePeriodo - diasIncapacidadDentroPeriodo;
     console.log(diasDePeriodo)
     const subtotalCalculo = Math.ceil(diasDePeriodo * parseFloat(salarioDiarioStr));
 
